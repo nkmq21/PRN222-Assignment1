@@ -1,0 +1,92 @@
+@model IEnumerable<TravelDataAccess.Booking>
+
+@{
+    ViewData["Title"] = "My Bookings";
+    var customerName = Context.Session.GetString("CustomerName");
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1><i class="bi bi-calendar-check"></i> My Bookings</h1>
+            <p class="lead">Welcome back, <strong>@customerName</strong>! Here are your travel bookings.</p>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <a asp-controller="Trip" asp-action="Index" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Book a New Trip
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var booking in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header @(booking.Status == "Confirmed" ? "bg-success text-white" : booking.Status == "Cancelled" ? "bg-danger text-white" : "bg-warning text-dark")">
+                            <h5 class="mb-0">
+                                <i class="bi bi-geo-alt"></i> @(booking.Trip?.Destination ?? "Loading...")
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <strong><i class="bi bi-hash"></i> Booking ID:</strong> @booking.BookingId<br/>
+                                <strong><i class="bi bi-calendar3"></i> Booking Date:</strong> @booking.BookingDate.ToString("MMMM dd, yyyy")<br/>
+                                <strong><i class="bi bi-tag"></i> Trip Code:</strong> @(booking.Trip?.Code ?? "N/A")<br/>
+                                <strong><i class="bi bi-cash"></i> Price:</strong> @(booking.Trip?.Price.ToString("C") ?? "N/A")<br/>
+                                <strong><i class="bi bi-info-circle"></i> Status:</strong> 
+                                <span class="badge @(booking.Status == "Confirmed" ? "bg-success" : booking.Status == "Cancelled" ? "bg-danger" : "bg-warning")">
+                                    @booking.Status
+                                </span>
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i> View Details
+                            </a>
+                            @if (booking.Status == "Confirmed")
+                            {
+                                <a asp-action="Cancel" asp-route-id="@booking.BookingId" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading"><i class="bi bi-info-circle"></i> No Bookings Yet</h4>
+            <p>You haven't made any bookings yet. Start exploring our amazing trips!</p>
+            <hr>
+            <a asp-controller="Trip" asp-action="Index" class="btn btn-primary">
+                <i class="bi bi-globe"></i> Browse Available Trips
+            </a>
+        </div>
+    }
+</div>
+

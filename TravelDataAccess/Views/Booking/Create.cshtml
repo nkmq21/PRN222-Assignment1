@@ -1,0 +1,103 @@
+@{
+    ViewData["Title"] = "Create Booking";
+    var availableTrips = ViewBag.AvailableTrips as List<TravelDataAccess.Trip>;
+    var selectedTrip = ViewBag.SelectedTrip as TravelDataAccess.Trip;
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1><i class="bi bi-plus-circle"></i> Create New Booking</h1>
+            
+            @if (selectedTrip != null)
+            {
+                <div class="card shadow-lg mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0"><i class="bi bi-geo-alt"></i> @selectedTrip.Destination</h3>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4"><i class="bi bi-tag"></i> Trip Code:</dt>
+                            <dd class="col-sm-8">@selectedTrip.Code</dd>
+                            
+                            <dt class="col-sm-4"><i class="bi bi-cash"></i> Price:</dt>
+                            <dd class="col-sm-8"><strong class="text-success">@selectedTrip.Price.ToString("C")</strong></dd>
+                            
+                            <dt class="col-sm-4"><i class="bi bi-flag"></i> Status:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-success">@selectedTrip.Status</span>
+                            </dd>
+                        </dl>
+                        
+                        <hr />
+                        
+                        <form asp-action="Create" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" name="tripId" value="@selectedTrip.TripId" />
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> You are about to book this trip. Please confirm below.
+                            </div>
+                            
+                            <div class="form-group mt-3">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-check-circle"></i> Confirm Booking
+                                </button>
+                                <a asp-controller="Trip" asp-action="Index" class="btn btn-secondary btn-lg">
+                                    <i class="bi bi-arrow-left"></i> Back to Trips
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+            else if (availableTrips != null && availableTrips.Any())
+            {
+                <div class="card shadow mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Select a Trip</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Please select a trip from the available options below:</p>
+                        
+                        <div class="row">
+                            @foreach (var trip in availableTrips)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="bi bi-geo-alt"></i> @trip.Destination</h5>
+                                            <p class="card-text">
+                                                <strong>Code:</strong> @trip.Code<br/>
+                                                <strong>Price:</strong> @trip.Price.ToString("C")
+                                            </p>
+                                            <a asp-action="Create" asp-route-tripId="@trip.TripId" class="btn btn-primary">
+                                                <i class="bi bi-check-circle"></i> Select This Trip
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning mt-4">
+                    <h4 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> No Available Trips</h4>
+                    <p>Sorry, there are no available trips at the moment. Please check back later!</p>
+                    <hr>
+                    <a asp-action="MyBookings" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to My Bookings
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

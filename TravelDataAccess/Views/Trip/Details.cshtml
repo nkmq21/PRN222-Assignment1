@@ -1,0 +1,46 @@
+@model TravelDataAccess.Trip
+
+@{
+    ViewData["Title"] = "Trip Details";
+}
+
+<h1>Trip Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Code)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+        
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Destination)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Destination)
+        </dd>
+        
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-9">
+            @Model.Price.ToString("C")
+        </dd>
+        
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TripId" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+

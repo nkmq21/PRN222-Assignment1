@@ -1,0 +1,73 @@
+@model TravelDataAccess.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1><i class="bi bi-info-circle"></i> Booking Details</h1>
+            
+            <div class="card shadow-lg mt-4">
+                <div class="card-header @(Model.Status == "Confirmed" ? "bg-success text-white" : Model.Status == "Cancelled" ? "bg-danger text-white" : "bg-warning text-dark")">
+                    <h3 class="mb-0">
+                        <i class="bi bi-geo-alt"></i> @(Model.Trip?.Destination ?? "Loading...")
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-muted">Booking Information</h5>
+                            <dl class="row">
+                                <dt class="col-sm-5"><i class="bi bi-hash"></i> Booking ID:</dt>
+                                <dd class="col-sm-7">@Model.BookingId</dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-calendar3"></i> Booking Date:</dt>
+                                <dd class="col-sm-7">@Model.BookingDate.ToString("MMMM dd, yyyy")</dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-info-circle"></i> Status:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge @(Model.Status == "Confirmed" ? "bg-success" : Model.Status == "Cancelled" ? "bg-danger" : "bg-warning")">
+                                        @Model.Status
+                                    </span>
+                                </dd>
+                            </dl>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5 class="text-muted">Trip Information</h5>
+                            <dl class="row">
+                                <dt class="col-sm-5"><i class="bi bi-tag"></i> Trip Code:</dt>
+                                <dd class="col-sm-7">@(Model.Trip?.Code ?? "N/A")</dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-geo-alt"></i> Destination:</dt>
+                                <dd class="col-sm-7">@(Model.Trip?.Destination ?? "N/A")</dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-cash"></i> Price:</dt>
+                                <dd class="col-sm-7"><strong>@(Model.Trip?.Price.ToString("C") ?? "N/A")</strong></dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-flag"></i> Trip Status:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-info">@(Model.Trip?.Status ?? "N/A")</span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a asp-action="MyBookings" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to My Bookings
+                    </a>
+                    @if (Model.Status == "Confirmed")
+                    {
+                        <a asp-action="Cancel" asp-route-id="@Model.BookingId" class="btn btn-danger">
+                            <i class="bi bi-x-circle"></i> Cancel This Booking
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

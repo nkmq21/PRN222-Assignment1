@@ -1,0 +1,78 @@
+@model TravelDataAccess.Booking
+
+@{
+    ViewData["Title"] = "Cancel Booking";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1><i class="bi bi-x-circle text-danger"></i> Cancel Booking</h1>
+            
+            <div class="alert alert-warning mt-4">
+                <h4 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> Are you sure?</h4>
+                <p>Are you sure you want to cancel this booking? This action cannot be undone.</p>
+            </div>
+            
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-geo-alt"></i> @(Model.Trip?.Destination ?? "Loading...")
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-muted">Booking Information</h5>
+                            <dl class="row">
+                                <dt class="col-sm-5"><i class="bi bi-hash"></i> Booking ID:</dt>
+                                <dd class="col-sm-7">@Model.BookingId</dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-calendar3"></i> Booking Date:</dt>
+                                <dd class="col-sm-7">@Model.BookingDate.ToString("MMMM dd, yyyy")</dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-info-circle"></i> Status:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-success">@Model.Status</span>
+                                </dd>
+                            </dl>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5 class="text-muted">Trip Information</h5>
+                            <dl class="row">
+                                <dt class="col-sm-5"><i class="bi bi-tag"></i> Trip Code:</dt>
+                                <dd class="col-sm-7">@(Model.Trip?.Code ?? "N/A")</dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-geo-alt"></i> Destination:</dt>
+                                <dd class="col-sm-7">@(Model.Trip?.Destination ?? "N/A")</dd>
+                                
+                                <dt class="col-sm-5"><i class="bi bi-cash"></i> Price:</dt>
+                                <dd class="col-sm-7"><strong>@(Model.Trip?.Price.ToString("C") ?? "N/A")</strong></dd>
+                            </dl>
+                        </div>
+                    </div>
+                    
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger mt-3">
+                            @TempData["Error"]
+                        </div>
+                    }
+                </div>
+                <div class="card-footer bg-transparent">
+                    <form asp-action="Cancel" method="post">
+                        <input type="hidden" asp-for="BookingId" />
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="bi bi-x-circle"></i> Yes, Cancel This Booking
+                        </button>
+                        <a asp-action="MyBookings" class="btn btn-secondary btn-lg">
+                            <i class="bi bi-arrow-left"></i> No, Go Back
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
